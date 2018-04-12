@@ -9,6 +9,13 @@
 -> 그래서 예측된 결과가 도출된다.
 3. 인공지능(artificial intelligence)
 4. 협업 필터링(collaborative filtering): 큰 무리의 사람들을 검색해서 검색자와 유사한 취향을 가진 작은 집합을 발견하는 방식
+5. 유사도(similarity score): 사람들 간의 취향이 얼마나 비슷한지 결정하는 방법,
+유사도 계산방법으로는 유클리디안 거리점수(euclidean distance socre)와 피어슨 상관점수(Pearson correlation score) 계산방법이 있다.
+6. 유클리디안 거리점수(euclidean distance socre): 두 개 속성들을 가진 비교군들을 차트위에 그리는 방식, 유사한 비교군들을 묶는다.
+-> 유사한 사람일 수록 1에 가까운 값이 나온다.
+7. 피어슨 상관점수(Pearson correlation score): 두 개의 비교군이 가진 여러 속성들을 차트위에 그리는 방식이다. 
+-> 상관계수는 두 개의 데이터 집합이 한 직선으로 얼마나 잘 표현되는가를 나타내는 측정값이다.
+-> 유사도가 높을 수록 최적 맞춤선에 값들이 가까워진다.
 
 이슈사항
 1. 기계학습의 이슈

@@ -63,7 +63,23 @@ def sim_pearson(prefs,p1,p2):
 
     return r
 
-
+def topMatches(prefs, person, n=5, similarity=sim_pearson):
+    # 인자값을 정의하는 구간에서 정의가 아래와 같이 가능하다
+    scores=[(similarity(prefs, person, other), other)
+                for other in prefs if other != person]
+    # 최고점이 상단에 오도록 목록을 정렬
+    #print(scores)
+    # sort는 정렬인데, 낮은 차순으로 정렬을 한다
+    scores.sort()
+    #print(scores)
+    #낮은 차순 역전하기 위해서 reverse를 사용한다
+    scores.reverse()
+    #print(scores)
+    # scores[0:n] 의 의미
+    # 정렬이 된 scores 라면 [첫번째 인자값: 두번째 인자값]
+    # 두번째 인자값은 정렬된 상태에서 차례대로 출력할 개수를 의미한다
+    # 첫번째 인자값은 개수를 자를경우 개층을 의미한다
+    return scores[0:n]
 
 # 유클리디안 거리점수를 이용평론가 순위 매기는 메소드
 def distanceTopMatches(prefs, person, n=5, similarity=sim_distance):
@@ -82,31 +98,55 @@ def pearsonTopMatches(prefs, person, n=5, similarity=sim_pearson):
     scores.reverse()
     return scores[0:n]
 
-# 다른 삶과의 순위의 가중평균값을 이용해서 특정 사람에 추천
+# 다른 사람과의 순위의 가중평균값을 이용해서 특정 사람에 추천
+# similarity=sim_pearson 함수 바꿔치기가 가능
 def getRecommendations(prefs, person, similarity=sim_pearson):
     totals={}
     simSums={}
     for other in prefs:
         #나와 나를 비교하지 말 것
+        print('other1: ' + other);
         if other == person : continue
         sim=similarity(prefs,person,other)
         # 0 이하 점수는 무시함
-        if sim<=0: continue
+
+        if sim<=0:
+            print('continue person: ' +other)
+        if sim<=0:  continue
         for item in prefs[other]:
             # 내가 보지 못한 영화만 대상
+            print('other: ' + other)
+            print('item: ' + item)
             if item not in prefs[person] or prefs[person][item] == 0:
                 # 유사도 * 점수
+                if not totals:
+                    print('--------------totals-------------')
+                    print(totals)
+                    print('---------------------------------')
                 totals.setdefault(item,0)
                 totals[item]+=prefs[other][item]*sim
+                print('--------------totals-------------')
+                print(totals)
+                print('---------------------------------')
 
+
+
+                if not simSums:
+                    print('--------------simSums-------------')
+                    print(simSums)
+                    print('---------------------------------')
                 # 유사도 합계
                 simSums.setdefault(item,0)
                 simSums[item]+=sim
+                print('--------------simSums-------------')
+                print(simSums)
+                print('---------------------------------')
 
-        # 정규화된 목록 생성
-        rankings=[(total/simSums[item],item) for item, total in totals.items()]
+    # 정규화된 목록 생성
 
-        # 정렬된 목록 리턴
-        rankings.sort()
-        rankings.reverse()
-        return rankings
+    rankings=[(item,total/simSums[item]) for item, total in totals.items()]
+
+    # 정렬된 목록 리턴
+    rankings.sort()
+    rankings.reverse()
+    return rankings
